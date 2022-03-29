@@ -53,6 +53,7 @@ class ArticleResultFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        retainInstance = true
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
