@@ -1,21 +1,21 @@
 package com.codepath.nytimes.ui.search
 
 import android.content.Context
-import com.codepath.nytimes.networking.NYTimesApiClient
-import androidx.recyclerview.widget.RecyclerView
-import androidx.core.widget.ContentLoadingProgressBar
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
-import com.codepath.nytimes.R
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.codepath.nytimes.networking.CallbackResponse
-import com.codepath.nytimes.models.Article
+import android.view.*
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuItemCompat
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.codepath.nytimes.R
+import com.codepath.nytimes.models.Article
+import com.codepath.nytimes.networking.CallbackResponse
+import com.codepath.nytimes.networking.NYTimesApiClient
+
 
 /**
  * A fragment representing a list of Items.
@@ -37,28 +37,33 @@ class ArticleResultFragment
     var adapter = MyArticleResultRecyclerViewAdapter()
     override fun onPrepareOptionsMenu(menu: Menu) {
         // TODO (checkpoint #4): Uncomment this code when you implement the search menu
-//        SearchView item = (SearchView) menu.findItem(R.id.action_search).getActionView();
-//        item.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                loadNewArticlesByQuery(query);
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return true;
-//            }
-//        });
+        val item : SearchView = menu.findItem(R.id.action_search).actionView as SearchView
+        item.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                loadNewArticlesByQuery(query);
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                return true
+            }
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.search_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_article_result_list, container, false)
+        activity?.title = getString(R.string.action_bar_search)
         val localRecyclerView = view.findViewById<RecyclerView>(R.id.list)
         recyclerView = localRecyclerView
         progressSpinner = view.findViewById(R.id.progress)
